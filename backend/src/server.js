@@ -17,7 +17,7 @@ if (NODE_ENV === "production") {
 }
 
 app.get("/{*any}", (req, res) => {
-  res.sendFile(__dirname, "../admin/dist", "index.js");
+  res.sendFile(__dirname, "../admin", "dist", "index.html");
 });
 
 app.listen(PORT, () => {
