@@ -2,8 +2,6 @@ import express from "express";
 import { ENV } from "./config/env.js";
 import path from "path";
 
-const __dirname = path.resolve();
-
 const app = express();
 const PORT = ENV.PORT;
 const NODE_ENV = ENV.NODE_ENV;
@@ -13,13 +11,21 @@ app.get("/api/health", (req, res) => {
 });
 
 if (NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../admin/dist")));
+  app.use(express.static(path.join(process.cwd(), "admin/dist")));
 }
 
-app.get("/{*any}", (req, res) => {
-  res.sendFile(__dirname, "../admin", "dist", "index.html");
+app.get("*", (req, res) => {
+  if (NODE_ENV === "production") {
+    res.sendFile(path.join(process.cwd(), "admin/dist/index.html"));
+  } else {
+    res.status(404).json({ message: "Not Found" });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
