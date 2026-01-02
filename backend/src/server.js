@@ -17,11 +17,7 @@ if (NODE_ENV === "production") {
 }
 
 app.get("/{*any}", (req, res) => {
-  if (NODE_ENV === "production") {
-    res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-  } else {
-    res.status(404).json({ message: "Not Found" });
-  }
+  res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
 });
 
 if (process.env.VERCEL !== "1") {
