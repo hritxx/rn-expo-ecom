@@ -67,12 +67,16 @@ let isConnected = false;
 
 export const connectDB = async () => {
   try {
-    if (isConnected) return;
+    if (isConnected) {
+      console.log("Using existing MongoDB connection");
+      return mongoose.connection;
+    }
 
     const conn = await mongoose.connect(DB_URL);
     console.log(`Connected to MongoDB: ${conn.connection.host}`);
 
-    isConnected = conn.connections[0].readyState === 1;
+    isConnected = conn.connection.readyState === 1;
+    return conn.connection;
   } catch (dbError) {
     console.error("Error connecting to the database", dbError);
     throw dbError;

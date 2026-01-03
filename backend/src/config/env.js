@@ -13,6 +13,12 @@ export const ENV = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
 
+if (!ENV.CLERK_PUBLISHABLE_KEY || !ENV.CLERK_SECRET_KEY) {
+  console.warn(
+    "Warning: CLERK_PUBLISHABLE_KEY and/or CLERK_SECRET_KEY are not set"
+  );
+}
+
 if (!ENV.DB_URL) {
   console.warn("Warning: DB_URL is not set in environment variables");
 }
