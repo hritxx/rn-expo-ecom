@@ -2,6 +2,7 @@ import express from "express";
 import { ENV } from "./config/env.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import { connectDB } from "./config/db.js";
 
 const app = express();
 const PORT = ENV.PORT;
@@ -9,7 +10,7 @@ const NODE_ENV = ENV.NODE_ENV;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Path to admin/dist relative to backend/src/server.js
+
 const adminDistPath = process.env.VERCEL
   ? path.join(process.cwd(), "admin", "dist")
   : path.join(__dirname, "..", "..", "admin", "dist");
@@ -33,6 +34,8 @@ app.get("/*splat", (req, res) => {
     }
   });
 });
+
+connectDB();
 
 if (process.env.VERCEL !== "1") {
   app.listen(PORT, () => {
