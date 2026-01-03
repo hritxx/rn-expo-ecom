@@ -1,6 +1,8 @@
 import express from "express";
 import { ENV } from "./config/env.js";
 import path from "path";
+import { clerkMiddleware } from "@clerk/express";
+
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
 
@@ -10,6 +12,8 @@ const NODE_ENV = ENV.NODE_ENV;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+app.use(clerkMiddleware());
 
 const adminDistPath = process.env.VERCEL
   ? path.join(process.cwd(), "admin", "dist")
