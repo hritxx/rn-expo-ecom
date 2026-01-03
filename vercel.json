@@ -7,9 +7,7 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "backend/src/server.js"
-    }
+    { "source": "/api/(.*)", "destination": "/backend/src/server.js" },
+    { "source": "/(.*)", "destination": "/backend/src/server.js" }
   ]
 }

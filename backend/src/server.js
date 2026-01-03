@@ -20,7 +20,7 @@ if (NODE_ENV === "production") {
   app.use(express.static(adminDistPath));
 }
 
-app.get("/{*any}", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(adminDistPath, "index.html"));
 });
 
