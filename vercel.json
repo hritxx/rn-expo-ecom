@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "admin/dist",
   "functions": {
     "api/index.js": {
       "includeFiles": "admin/dist/**"
