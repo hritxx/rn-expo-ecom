@@ -2,6 +2,8 @@ import express from "express";
 import { ENV } from "./config/env.js";
 import path from "path";
 import { clerkMiddleware } from "@clerk/express";
+import { serve } from "inngest/express";
+import { inngest, functions } from "./config/inngest.js";
 
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
@@ -12,7 +14,16 @@ const PORT = ENV.PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.json());
 app.use(clerkMiddleware());
+
+app.use(
+  "/api/inngest",
+  serve({
+    client: inngest,
+    functions,
+  })
+);
 
 const adminDistPath = process.env.VERCEL
   ? path.join(process.cwd(), "admin", "dist")
