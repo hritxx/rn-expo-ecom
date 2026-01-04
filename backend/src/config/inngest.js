@@ -10,18 +10,30 @@ const syncUser = inngest.createFunction(
   },
   { event: "clerk/user.created" },
   async ({ event }) => {
-    await connectDB();
-    const { id, email_addresses, first_name, last_name, image_url } =
-      event.data;
-    const newUser = {
-      clerkId: id,
-      email: email_addresses[0].email_address,
-      name: `${first_name || ""} ${last_name || ""}` || "User",
-      imageUrl: image_url,
-      addresses: [],
-      wishlist: [],
-    };
-    await User.create(newUser);
+    try {
+      await connectDB();
+      const { id, email_addresses, first_name, last_name, image_url } =
+        event.data;
+
+      if (!email_addresses || email_addresses.length === 0) {
+        throw new Error("User has no email addresses");
+      }
+
+      const fullName = `${first_name || ""} ${last_name || ""}`.trim();
+      const newUser = {
+        clerkId: id,
+        email: email_addresses[0].email_address,
+        name: fullName || "User",
+        imageUrl: image_url,
+        addresses: [],
+        wishlist: [],
+      };
+      await User.create(newUser);
+      console.log(`User synced successfully: ${id}`);
+    } catch (error) {
+      console.error("Failed to sync user:", error);
+      throw error;
+    }
   }
 );
 
@@ -31,11 +43,23 @@ const deleteUserFromDB = inngest.createFunction(
   },
   { event: "clerk/user.deleted" },
   async ({ event }) => {
-    await connectDB();
-    const { id } = event.data;
-    await User.deleteOne({ clerkId: id });
+    try {
+      await connectDB();
+      const { id } = event.data;
+      if (!id) {
+        throw new Error("User ID is required for deletion");
+      }
+      const result = await User.deleteOne({ clerkId: id });
+      console.log(
+        `User deletion result for ${id}:`,
+        result.deletedCount > 0 ? "success" : "not found"
+      );
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      throw error;
+    }
   }
 );
 
-// Create an empty array where we'll export future Inngest functions
+// export array of inngest functions
 export const functions = [syncUser, deleteUserFromDB];
