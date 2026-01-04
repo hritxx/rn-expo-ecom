@@ -38,3 +38,4 @@ export const connectDB = async () => {
     throw dbError;
   }
 };
+  
