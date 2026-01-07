@@ -86,6 +86,30 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     orderItems: [orderItemSchema],
+    shippingAddress: {
+      type: shippingAddressSchema,
+      required: true,
+    },
+    paymentResult: {
+      id: String,
+      status: String,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "shipped", "delivered"],
+      default: "pending",
+    },
+    deliveredAt: {
+      type: Date,
+    },
+    shippedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

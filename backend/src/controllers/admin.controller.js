@@ -2,6 +2,7 @@ import { Product } from "../models/product.model.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import cloudinary from "../config/cloudinary.js";
+import fs from "fs/promises";
 
 export async function createProduct(req, res) {
   try {
@@ -24,6 +25,9 @@ export async function createProduct(req, res) {
     });
 
     const uploadResults = await Promise.all(uploadPromises);
+
+    // Clean up temp files
+    await Promise.all(req.files.map((file) => fs.unlink(file.path)));
 
     // secure_url
     const imageUrls = uploadResults.map((result) => result.secure_url);
@@ -138,7 +142,7 @@ export async function getAllCustomers(_, res) {
     const customers = await User.find().sort({ createdAt: -1 });
     return res.status(200).json(customers);
   } catch (error) {
-    console.error("Erron in getAllCustomers controller");
+    console.error("Error in getAllCustomers controller");
     return res.status(500).json({ message: "Internal server error" });
   }
 }

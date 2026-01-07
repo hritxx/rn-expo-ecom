@@ -23,3 +23,7 @@ if (!ENV.CLERK_PUBLISHABLE_KEY || !ENV.CLERK_SECRET_KEY) {
 if (!ENV.DB_URL) {
   console.warn("Warning: DB_URL is not set in environment variables");
 }
+
+if (!ENV.ADMIN_EMAIL) {
+  console.warn("Warning: ADMIN_EMAIL is not set in environment variables");
+}
