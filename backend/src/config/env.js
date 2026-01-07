@@ -1,11 +1,12 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export const ENV = {
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || "development",
   DB_URL: process.env.DB_URL,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
@@ -21,4 +22,8 @@ if (!ENV.CLERK_PUBLISHABLE_KEY || !ENV.CLERK_SECRET_KEY) {
 
 if (!ENV.DB_URL) {
   console.warn("Warning: DB_URL is not set in environment variables");
+}
+
+if (!ENV.ADMIN_EMAIL) {
+  console.warn("Warning: ADMIN_EMAIL is not set in environment variables");
 }
