@@ -5,6 +5,8 @@ import { clerkMiddleware } from "@clerk/express";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./config/inngest.js";
 
+import adminRoutes from "./routes/admin.route.js";
+
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
 
@@ -15,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
-app.use(clerkMiddleware());
+app.use(clerkMiddleware()); // adds auth object in (req)
 
 app.use(
   "/api/inngest",
@@ -32,6 +34,8 @@ const adminDistPath = process.env.VERCEL
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "Success" });
 });
+
+app.use("/api/admin", adminRoutes);
 
 app.use(express.static(adminDistPath));
 
